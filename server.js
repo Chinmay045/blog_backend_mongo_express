@@ -8,7 +8,7 @@ mongoose.connect('mongodb://0.0.0.0:27017/Blog')
     .then(() => console.log("connected at port 5000"))
     .catch((error) => console.log("Db is not connected" + error));
 
-app.use('/', (req, res, next) => {
-    res.send("Hello world");
-})
-app.use(router);
+// app.use('/', (req, res, next) => {
+//     res.send("Hello world");
+// })
+app.use('/api/user', router);
