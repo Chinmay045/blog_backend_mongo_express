@@ -11,4 +11,5 @@ mongoose.connect('mongodb://0.0.0.0:27017/Blog')
 // app.use('/', (req, res, next) => {
 //     res.send("Hello world");
 // })
+app.use(express.json());
 app.use('/api/user', router);
