@@ -43,7 +43,7 @@ const signUp = async (req, res, next) => {
 }
 
 const login = async (req, res, next) => {
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
 
     let existingUser;
     try {
@@ -63,4 +63,4 @@ const login = async (req, res, next) => {
     return res.status(200).json({ message: "Login successful" })
 }
 
-module.exports = { getAllUsers, signUp };
+module.exports = { getAllUsers, signUp, login };
