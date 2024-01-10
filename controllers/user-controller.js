@@ -42,4 +42,25 @@ const signUp = async (req, res, next) => {
 
 }
 
+const login = async (req, res, next) => {
+    const { name, email, password } = req.body;
+
+    let existingUser;
+    try {
+        existingUser = await User.findOne({ email });
+
+    } catch (error) {
+        console.log("error occured" + error);
+    }
+    if (!existingUser) {
+        return res.status(400).json({ message: "user does not exist" });
+    }
+
+    const ispasswordCorrect = bcrypt.compareSync(password, existingUser.password);
+    if (!existingUser) {
+        return res.status(400).json({ message: "incorrect password" });
+    }
+    return res.status(200).json({ message: "Login successful" })
+}
+
 module.exports = { getAllUsers, signUp };
