@@ -13,3 +13,7 @@ const userSchema = new Schema({
         minlength: 6,
     }
 })
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

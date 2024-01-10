@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+const router = require('./routes/user-routes.js');
 const app = express();
 
 mongoose.connect('mongodb://0.0.0.0:27017/Blog')
