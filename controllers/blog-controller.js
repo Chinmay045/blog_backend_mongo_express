@@ -66,7 +66,7 @@ const getById = async (req, res, next) => {
     if (!blog) {
         res.status(404).json({ message: "cannot find the blog by id" });
     }
-    res.status(200).json({ id });
+    res.status(200).json({ blog});
 }
 
 module.exports = { getAllBlog, addBlog, update, getById };
