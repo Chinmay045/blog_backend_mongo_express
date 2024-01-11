@@ -53,4 +53,20 @@ const update = async (req, res, next) => {
 
 }
 
-module.exports = { getAllBlog, addBlog, update };
+const getById = async (req, res, next) => {
+    let blog;
+    const id = req.params.id;
+    try {
+
+        blog = await Blog.findById(id);
+    }
+    catch (error) {
+        return console.log(error);
+    }
+    if (!blog) {
+        res.status(404).json({ message: "cannot find the blog by id" });
+    }
+    res.status(200).json({ id });
+}
+
+module.exports = { getAllBlog, addBlog, update, getById };
