@@ -15,4 +15,42 @@ const getAllBlog = async (req, res, next) => {
     res.status(200).json({ blogs })
 }
 
-module.exports = getAllBlog;
+const addBlog = async (req, res, next) => {
+    const { title, description, image, user } = req.body;
+
+    const blog = new Blog({
+        title,
+        description,
+        image,
+        user
+    });
+    try {
+        await blog.save();
+    }
+    catch (error) {
+        return console.log(error);
+    }
+    res.status(200).json({ blog });
+}
+
+const update = async (req, res, next) => {
+    const { title, description } = req.body;
+    const blogId = req.params.id;
+    let blog;
+    try {
+        blog = await Blog.findByIdAndUpdate(blogId, {
+            title,
+            description
+        });
+    }
+    catch (error) {
+        return console.log("error occured" + error)
+    }
+    if (!blog) {
+        res.status(500).json({ message: "unable to update the blog" });
+    }
+    res.status(200).json({ blog });
+
+}
+
+module.exports = { getAllBlog, addBlog, update };

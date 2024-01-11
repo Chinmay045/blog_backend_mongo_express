@@ -4,6 +4,7 @@ const router = require('./routes/user-routes.js');
 const blogRouter = require('./routes/blog-routes.js');
 const app = express();
 
+
 mongoose.connect('mongodb://0.0.0.0:27017/Blog')
     .then(() => app.listen(5000))
     .then(() => console.log("connected at port 5000"))
@@ -15,3 +16,4 @@ mongoose.connect('mongodb://0.0.0.0:27017/Blog')
 app.use(express.json());
 app.use('/api/user', router);
 app.use('/api/blog', blogRouter);
+app.use('update/:id', blogRouter);
