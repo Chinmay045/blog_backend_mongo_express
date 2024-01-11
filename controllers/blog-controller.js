@@ -1,11 +1,11 @@
-const { default: mongoose } = require('mongoose');
-const Blog = require('../models/Blogs.js');
-
+const { mongoose } = require('mongoose');
+const BlogPost = require('../models/BlogPost.js');
+const User = require('../models/User.js')
 
 const getAllBlog = async (req, res, next) => {
     let blogs;
     try {
-        blogs = await Blog.find()
+        blogs = await BlogPost.find();
     }
     catch (error) {
         return console.log(error);
@@ -16,40 +16,43 @@ const getAllBlog = async (req, res, next) => {
     res.status(200).json({ blogs })
 }
 
-const addBlog = async (req, res, next) => {
-    const { title, description, image, user } = req.body;
+const addBlog = async (req, res) => {
+    const { title, description, image, userID } = req.body;
+    //console.log(req.body);
     let existingUser;
     try {
-        existingUser = await Blog.findById(user);
+        existingUser = await User.findById(userID);
     } catch (error) {
         return console.log(error)
     }
     if (!existingUser) {
-        res.status(404).json({ message: "could not find the user" })
+        return res.status(404).json({ message: "could not find the user" })
     }
+    //console.log(existingUser);
 
-    const blog = new Blog({
+
+    const blog = new BlogPost({
         title,
         description,
         image,
-        user
+        user: userID
     });
+    //console.log(blog);
     try {
-        const session = mongoose.startSession();
-        (await session).startTransaction();
-        await blog.save({ session })
-        existingUser.blogs.push(blog)
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await blog.save({ session });
+        existingUser.blogs.push(blog);
         await existingUser.save({ session })
-            (await session).commitTransaction();
-
+        await session.commitTransaction();
     }
     catch (error) {
         console.log(error);
-        return res.status(404).json({ message: error })
+        return res.status(500).json({ message: error })
     }
-    res.status(200).json({ blog });
-}
+    return res.status(200).json({ blog });
 
+}
 const update = async (req, res, next) => {
     const { title, description } = req.body;
     const blogId = req.params.id;
@@ -90,7 +93,9 @@ const deleteBlog = async (req, res, next) => {
     const id = req.params.id;
     let blog;
     try {
-        blog = await Blog.findByIdAndDelete(id);
+        blog = await Blog.findByIdAndDelete(id).populate('user');
+        await blog.user.blogs.pull(blog);
+        await blog.user.save();
     } catch (error) {
         return console.log(error);
     }
@@ -100,4 +105,4 @@ const deleteBlog = async (req, res, next) => {
     res.status(200).json({ message: "blog deleted" });
 }
 
-module.exports = { getAllBlog, addBlog, update, getById, deleteBlog };
+module.exports = { getAllBlog, addBlog, deleteBlog, getById, update };

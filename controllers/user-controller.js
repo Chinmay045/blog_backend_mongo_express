@@ -32,7 +32,7 @@ const signUp = async (req, res, next) => {
         name,
         email,
         password: hashedPassword,
-        blogs:[]
+        blogs: []
     })
     try {
         await user.save();
@@ -58,10 +58,10 @@ const login = async (req, res, next) => {
     }
 
     const ispasswordCorrect = bcrypt.compareSync(password, existingUser.password);
-    if (!existingUser) {
+    if (!ispasswordCorrect) {
         return res.status(400).json({ message: "incorrect password" });
     }
-    return res.status(200).json({ message: "Login successful" })
+    return res.status(200).json({ message: "Login successful", user: existingUser })
 }
 
 module.exports = { getAllUsers, signUp, login };
