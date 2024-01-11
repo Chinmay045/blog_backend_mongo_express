@@ -16,7 +16,12 @@ const userSchema = new Schema({
         type: String,
         require: true,
         minlength: 6,
-    }
+    },
+    blogs: [{
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true
+    }]
 })
 
 const User = mongoose.model('User', userSchema);
