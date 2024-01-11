@@ -66,7 +66,21 @@ const getById = async (req, res, next) => {
     if (!blog) {
         res.status(404).json({ message: "cannot find the blog by id" });
     }
-    res.status(200).json({ blog});
+    res.status(200).json({ blog });
 }
 
-module.exports = { getAllBlog, addBlog, update, getById };
+const deleteBlog = async (req, res, next) => {
+    const id = req.params.id;
+    let blog;
+    try {
+        blog = await Blog.findByIdAndDelete(id);
+    } catch (error) {
+        return console.log(error);
+    }
+    if (!blog) {
+        res.status(400).json({ message: "could not find the blog" });
+    }
+    res.status(200).json({ message: "blog deleted" });
+}
+
+module.exports = { getAllBlog, addBlog, update, getById, deleteBlog };
